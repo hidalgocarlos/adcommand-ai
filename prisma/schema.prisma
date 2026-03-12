@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  role          Role     @default(OPERATOR)
+  passwordHash  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  workspaces    WorkspaceMember[]
+  auditLogs     AuditLog[]
+}
+
+enum Role { 
+  ADMIN 
+  OPERATOR 
+  VIEWER 
+}
+
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  members     WorkspaceMember[]
+  connections AdConnection[]
+  campaigns   Campaign[]
+  aiKeys      AiKeyConfig?
+  createdAt   DateTime @default(now())
+}
+
+model WorkspaceMember {
+  userId      String
+  workspaceId String
+  role        Role
+  user        User      @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  @@id([userId, workspaceId])
+}
+
+model AdConnection {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  platform        String   @default("META")
+  accessToken     String   // AES-256 encrypted
+  adAccountId     String
+  adAccountName   String?
+  tokenExpiry     DateTime?
+  lastSyncAt      DateTime?
+  status          String   @default("ACTIVE")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model AiKeyConfig {
+  id              String   @id @default(cuid())
+  workspaceId     String   @unique
+  openaiKey       String?  // AES-256 encrypted
+  geminiKey       String?  // AES-256 encrypted
+  anthropicKey    String?  // AES-256 encrypted
+  defaultProvider String   @default("anthropic")
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model Campaign {
+  id              String   @id @default(cuid())
+  workspaceId     String
+  metaCampaignId  String
+  name            String
+  status          String
+  objective       String?
+  dailyBudget     Float?
+  lifetimeBudget  Float?
+  startTime       DateTime?
+  stopTime        DateTime?
+  adSets          AdSet[]
+  insights        CampaignInsight[]
+  aiAnalyses      AiAnalysis[]
+  workspace       Workspace @relation(fields: [workspaceId], references: [id])
+}
+
+model AdSet {
+  id              String   @id @default(cuid())
+  campaignId      String
+  metaAdSetId     String
+  name            String
+  status          String
+  dailyBudget     Float?
+  targeting       Json?
+  ads             Ad[]
+  insights        AdSetInsight[]
+  campaign        Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model Ad {
+  id              String   @id @default(cuid())
+  adSetId         String
+  metaAdId        String
+  name            String
+  status          String
+  creative        Json?
+  insights        AdInsight[]
+  adSet           AdSet @relation(fields: [adSetId], references: [id])
+}
+
+model CampaignInsight {
+  id              String   @id @default(cuid())
+  campaignId      String
+  dateStart       DateTime
+  dateStop        DateTime
+  impressions     Int      @default(0)
+  clicks          Int      @default(0)
+  spend           Float    @default(0)
+  reach           Int      @default(0)
+  ctr             Float    @default(0)
+  cpc             Float    @default(0)
+  cpm             Float    @default(0)
+  conversions     Int      @default(0)
+  costPerConversion Float?
+  roas            Float?
+  frequency       Float?
+  campaign        Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model AdSetInsight {
+  id              String   @id @default(cuid())
+  adSetId         String
+  dateStart       DateTime
+  dateStop        DateTime
+  impressions     Int      @default(0)
+  clicks          Int      @default(0)
+  spend           Float    @default(0)
+  reach           Int      @default(0)
+  adSet           AdSet @relation(fields: [adSetId], references: [id])
+}
+
+model AdInsight {
+  id              String   @id @default(cuid())
+  adId            String
+  dateStart       DateTime
+  dateStop        DateTime
+  impressions     Int      @default(0)
+  clicks          Int      @default(0)
+  spend           Float    @default(0)
+  reach           Int      @default(0)
+  ad              Ad    @relation(fields: [adId], references: [id])
+}
+
+model AiAnalysis {
+  id              String   @id @default(cuid())
+  campaignId      String
+  provider        String
+  model           String
+  analysisType    String
+  prompt          String   @db.Text
+  response        String   @db.Text
+  recommendations Json?
+  score           Int?
+  createdAt       DateTime @default(now())
+  campaign        Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String
+  action      String
+  entity      String
+  entityId    String?
+  metadata    Json?
+  ip          String?
+  createdAt   DateTime @default(now())
+  user        User @relation(fields: [userId], references: [id])
+}
