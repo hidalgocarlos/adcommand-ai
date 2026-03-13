@@ -41,7 +41,6 @@
     "next-auth": "^5.0.0-beta.30",
     "next-themes": "^0.4.6",
     "openai": "^6.27.0",
-    "postcss.config.mjs": "^1.0.0",
     "@prisma/adapter-pg": "^7.5.0",
     "pg": "^8.13.1",
     "prisma": "^7.5.0",
