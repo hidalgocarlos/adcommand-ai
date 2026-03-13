@@ -1,0 +1,38 @@
+src/app/dashboard/page.tsx(133,20): error TS2304: Cannot find name 'dateRange'.
+src/app/dashboard/page.tsx(174,22): error TS2304: Cannot find name 'Sparkles'.
+src/app/onboarding/page.tsx(167,28): error TS2304: Cannot find name 'Badge'.
+src/app/onboarding/page.tsx(167,113): error TS2304: Cannot find name 'Badge'.
+src/app/onboarding/page.tsx(236,22): error TS2304: Cannot find name 'Brain'.
+src/components/theme-provider.tsx(5,41): error TS2307: Cannot find module 'next-themes/dist/types' or its corresponding type declarations.
+src/lib/auth.ts(2,31): error TS2307: Cannot find module '@auth/prisma-adapter' or its corresponding type declarations.
+src/lib/db.ts(1,10): error TS2305: Module '"@prisma/client"' has no exported member 'PrismaClient'.
+src/lib/jobs/sync-queue.ts(5,3): error TS2322: Type 'Redis' is not assignable to type 'ConnectionOptions'.
+  Type 'Redis' is not assignable to type 'ClusterOptions | Redis | Cluster'.
+    Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/Redis").default' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/Redis").default'.
+      Types of property 'options' are incompatible.
+        Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/redis/RedisOptions").RedisOptions' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/redis/RedisOptions").RedisOptions'.
+          Type 'RedisOptions' is not assignable to type 'CommonRedisOptions'.
+            Types of property 'Connector' are incompatible.
+              Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/connectors/ConnectorConstructor").default | undefined' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/connectors/ConnectorConstructor").default | undefined'.
+                Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/connectors/ConnectorConstructor").default' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/connectors/ConnectorConstructor").default'.
+                  Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/connectors/AbstractConnector").default' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/connectors/AbstractConnector").default'.
+                    Property 'connecting' is protected but type 'AbstractConnector' is not a class derived from 'AbstractConnector'.
+src/lib/jobs/sync-worker.ts(3,10): error TS2614: Module '"../db"' has no exported member 'db'. Did you mean to use 'import db from "../db"' instead?
+src/lib/jobs/sync-worker.ts(29,24): error TS2488: Type '{ data: MetaCampaign[]; }' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/lib/jobs/sync-worker.ts(50,38): error TS2554: Expected 2 arguments, but got 1.
+src/lib/jobs/sync-worker.ts(51,25): error TS2488: Type '{ data: MetaInsight[]; }' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/lib/jobs/sync-worker.ts(68,5): error TS2322: Type 'Redis' is not assignable to type 'ConnectionOptions'.
+  Type 'Redis' is not assignable to type 'ClusterOptions | Redis | Cluster'.
+    Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/Redis").default' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/Redis").default'.
+      Types of property 'options' are incompatible.
+        Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/redis/RedisOptions").RedisOptions' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/redis/RedisOptions").RedisOptions'.
+          Type 'RedisOptions' is not assignable to type 'CommonRedisOptions'.
+            Types of property 'Connector' are incompatible.
+              Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/connectors/ConnectorConstructor").default | undefined' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/connectors/ConnectorConstructor").default | undefined'.
+                Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/connectors/ConnectorConstructor").default' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/connectors/ConnectorConstructor").default'.
+                  Type 'import("C:/Users/hidal/Downloads/facedash/node_modules/ioredis/built/connectors/AbstractConnector").default' is not assignable to type 'import("C:/Users/hidal/Downloads/facedash/node_modules/bullmq/node_modules/ioredis/built/connectors/AbstractConnector").default'.
+                    Property 'connecting' is protected but type 'AbstractConnector' is not a class derived from 'AbstractConnector'.
+src/server/routers/ai.ts(3,10): error TS2614: Module '"@/lib/db"' has no exported member 'db'. Did you mean to use 'import db from "@/lib/db"' instead?
+src/server/routers/ai.ts(4,10): error TS2305: Module '"@/lib/ai/analyzer"' has no exported member 'AiAnalyzer'.
+src/server/routers/meta.ts(3,10): error TS2614: Module '"@/lib/db"' has no exported member 'db'. Did you mean to use 'import db from "@/lib/db"' instead?
+src/server/routers/workspace.ts(3,10): error TS2614: Module '"@/lib/db"' has no exported member 'db'. Did you mean to use 'import db from "@/lib/db"' instead?

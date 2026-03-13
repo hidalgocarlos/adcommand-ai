@@ -14,6 +14,7 @@ export interface MetaCampaign {
 }
 
 export interface MetaInsight {
+  date_start: string;
   impressions: string;
   clicks: string;
   spend: string;
@@ -51,16 +52,18 @@ export class MetaAdsApi {
 
   async getCampaigns(adAccountId: string) {
     const fields = 'id,name,status,objective,daily_budget,lifetime_budget,start_time,stop_time';
-    return this.get<{ data: MetaCampaign[] }>(`/${adAccountId}/campaigns`, { fields });
+    const result = await this.get<{ data: MetaCampaign[] }>(`/${adAccountId}/campaigns`, { fields });
+    return result.data;
   }
 
   async getCampaignInsights(campaignId: string, timeRange: { since: string; until: string }) {
-    const fields = 'impressions,clicks,spend,reach,inline_link_click_ctr,cpp,cpc,cpm,actions,action_values,frequency';
-    return this.get<{ data: MetaInsight[] }>(`/${campaignId}/insights`, {
+    const fields = 'date_start,impressions,clicks,spend,reach,inline_link_click_ctr,cpp,cpc,cpm,actions,action_values,frequency';
+    const result = await this.get<{ data: MetaInsight[] }>(`/${campaignId}/insights`, {
       fields,
       time_range: JSON.stringify(timeRange),
       level: 'campaign',
     });
+    return result.data;
   }
 
   async getAdSets(campaignId: string) {

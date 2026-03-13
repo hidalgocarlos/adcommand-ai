@@ -1,34 +1,55 @@
-import { generateText, streamText } from 'ai';
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
-import { google } from '@ai-sdk/google';
+import { generateObject } from 'ai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { z } from 'zod';
 
 const SYSTEM_PROMPT = `
-You are an elite Meta Ads performance analyst with 15+ years of experience 
-managing multi-million dollar ad budgets. You analyze campaign data and provide 
-specific, data-backed recommendations. Always structure your response as:
-
-1. **EXECUTIVE SUMMARY** (2-3 sentences, overall assessment)
-2. **WHAT'S WORKING** (list campaigns/adsets performing well, explain WHY with metrics)
-3. **WHAT'S NOT WORKING** (list underperformers, root cause analysis)
-4. **CRITICAL ACTIONS** (max 5, prioritized, each with: action, reason, expected impact)
-5. **BUDGET RECOMMENDATIONS** (specific reallocation suggestions with percentages)
-6. **30-DAY FORECAST** (based on current trajectory)
-
-Be specific. Use the actual numbers from the data. Never be vague.
+You are an elite Meta Ads performance analyst. Analyze campaign data and provide 
+specific, data-backed recommendations.
 `;
 
-export async function analyzeCampaignPerformance(data: any, provider: 'openai' | 'anthropic' | 'google' = 'anthropic') {
-  const model = 
-    provider === 'openai' ? openai('gpt-4o') :
-    provider === 'anthropic' ? anthropic('claude-3-5-sonnet-20240620') :
-    google('gemini-1.5-pro');
+const AnalysisSchema = z.object({
+  summary: z.string(),
+  metrics: z.object({
+    cpc: z.number(),
+    roas: z.number(),
+    spend: z.number(),
+  }),
+  recommendations: z.array(z.object({
+    type: z.string(),
+    priority: z.string(),
+    title: z.string(),
+    explanation: z.string(),
+    impact: z.string(),
+  })),
+});
 
-  const prompt = `Analyze the following Meta Ads data: ${JSON.stringify(data)}`;
+export class AiAnalyzer {
+  constructor(private apiKey: string, private provider: 'OPENAI' | 'ANTHROPIC' | 'GOOGLE') {}
 
-  return streamText({
-    model,
-    system: SYSTEM_PROMPT,
-    messages: [{ role: 'user', content: prompt }],
-  });
+  private getModel() {
+    if (this.provider === 'OPENAI') {
+      const openai = createOpenAI({ apiKey: this.apiKey });
+      return openai('gpt-4o');
+    }
+    if (this.provider === 'ANTHROPIC') {
+      const anthropic = createAnthropic({ apiKey: this.apiKey });
+      return anthropic('claude-3-5-sonnet-20240620');
+    }
+    const google = createGoogleGenerativeAI({ apiKey: this.apiKey });
+    return google('gemini-1.5-pro');
+  }
+
+  async analyzeCampaignPerformance(campaignData: any) {
+    const model = this.getModel();
+    const { object } = await generateObject({
+      model,
+      schema: AnalysisSchema,
+      system: SYSTEM_PROMPT,
+      prompt: `Analyze this campaign data: ${JSON.stringify(campaignData)}`,
+    });
+    
+    return object;
+  }
 }

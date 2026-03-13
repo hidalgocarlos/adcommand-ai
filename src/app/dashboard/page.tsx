@@ -1,228 +1,169 @@
-"use client";
+'use client';
 
-import { useState } from 'react';
-import { KPICard } from '@/components/dashboard/KPICard';
-import { PerformanceChart } from '@/components/dashboard/PerformanceChart';
-import { CampaignTable } from '@/components/dashboard/CampaignTable';
-import { AIPanel } from '@/components/dashboard/AIPanel';
+import React, { useState } from 'react';
 import { 
-  LayoutDashboard, 
   BarChart3, 
-  Megaphone, 
-  Cpu, 
-  Settings, 
-  Search,
+  TrendingUp, 
+  Users, 
+  Target, 
+  ArrowUpRight, 
+  ArrowDownRight,
   Plus,
   RefreshCw,
   Calendar,
   LogOut,
-  Bell
+  Bell,
+  Sparkles,
+  Search,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { KPICard } from '@/components/dashboard/KPICard';
+import { PerformanceChart } from '@/components/dashboard/PerformanceChart';
+import { CampaignTable } from '@/components/dashboard/CampaignTable';
+import { AIPanel } from '@/components/dashboard/AIPanel';
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState('Overview');
-
-  const mockKpiData = [
-    { title: "Total Spend", value: "$12,450.00", change: 12.5, label: "vs last period", status: "good" as const },
-    { title: "Impressions", value: "842.5K", change: -2.3, label: "vs last period", status: "warning" as const },
-    { title: "Clicks", value: "12,840", change: 8.7, label: "vs last period", status: "good" as const },
-    { title: "CTR", value: "1.52%", change: 4.1, label: "vs last period", status: "good" as const },
-    { title: "Conversions", value: "482", change: 15.2, label: "vs last period", status: "good" as const },
-    { title: "ROAS", value: "3.2x", change: -1.5, label: "vs last period", status: "critical" as const },
-  ];
-
-  const mockChartData = [
-    { date: 'Mon', value: 400 },
-    { date: 'Tue', value: 300 },
-    { date: 'Wed', value: 600 },
-    { date: 'Thu', value: 800 },
-    { date: 'Fri', value: 500 },
-    { date: 'Sat', value: 900 },
-    { date: 'Sun', value: 700 },
-  ];
+  const [dateRange, setDateRange] = useState('Last 7 Days');
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-50 overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#050505] text-white selection:bg-purple-500/30">
       {/* Sidebar */}
-      <aside className="w-72 border-r border-slate-900 bg-slate-950/80 backdrop-blur-xl p-8 flex flex-col">
-        <div className="flex items-center gap-3 mb-10 px-2">
-          <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg shadow-blue-500/20 flex items-center justify-center">
-            <Cpu className="text-white h-6 w-6" />
-          </div>
-          <span className="text-2xl font-black tracking-tighter text-white">ADCONTROL</span>
-        </div>
-        
-        <nav className="flex-1 space-y-1">
-          <NavItem 
-            icon={<LayoutDashboard size={20} />} 
-            label="Overview" 
-            active={activeTab === 'Overview'} 
-            onClick={() => setActiveTab('Overview')} 
-          />
-          <NavItem 
-            icon={<Megaphone size={20} />} 
-            label="Campaigns" 
-            active={activeTab === 'Campaigns'} 
-            onClick={() => setActiveTab('Campaigns')} 
-          />
-          <NavItem 
-            icon={<Cpu size={20} />} 
-            label="AI Insights" 
-            active={activeTab === 'AI Insights'} 
-            onClick={() => setActiveTab('AI Insights')} 
-          />
-          <NavItem 
-            icon={<BarChart3 size={20} />} 
-            label="Reporting" 
-            active={activeTab === 'Reporting'} 
-            onClick={() => setActiveTab('Reporting')} 
-          />
-          <div className="pt-8 mb-2 px-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest">Settings</div>
-          <NavItem icon={<Settings size={20} />} label="Workspace" />
-          <NavItem icon={<Plus size={20} />} label="New Connection" />
-        </nav>
-
-        <div className="pt-6 mt-auto border-t border-slate-900">
-          <div className="flex items-center gap-3 px-2 mb-6">
-            <div className="h-10 w-10 rounded-full bg-slate-800 border border-slate-700" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-white truncate text-ellipsis overflow-hidden">Alex Media</p>
-              <p className="text-[10px] text-slate-500 font-medium">Administrator</p>
+      <aside className="w-64 border-r border-white/5 bg-black/40 backdrop-blur-xl flex flex-col">
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
+              <BarChart3 className="w-6 h-6" />
             </div>
-            <LogOut size={16} className="text-slate-600 hover:text-red-400 cursor-pointer" />
+            <span className="text-xl font-bold tracking-tight">AdCommand</span>
+          </div>
+
+          <nav className="space-y-1">
+            {['Overview', 'Campaigns', 'Audiences', 'Creatives', 'Settings'].map((item) => (
+              <button
+                key={item}
+                onClick={() => setActiveTab(item)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all group",
+                  activeTab === item 
+                    ? "bg-white/10 text-white" 
+                    : "text-white/50 hover:text-white hover:bg-white/5"
+                )}
+              >
+                {item === 'Overview' && <BarChart3 className="w-4 h-4" />}
+                {item === 'Campaigns' && <Target className="w-4 h-4" />}
+                {item === 'Audiences' && <Users className="w-4 h-4" />}
+                {item === 'Creatives' && <TrendingUp className="w-4 h-4" />}
+                {item === 'Settings' && <Plus className="w-4 h-4" />}
+                {item}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-auto p-4 border-t border-white/5">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/5 group cursor-pointer hover:bg-white/10 transition-all">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-red-500" />
+            <div className="flex-1 overflow-hidden">
+              <p className="text-sm font-medium truncate">Carlos Hidalgo</p>
+              <p className="text-xs text-white/40 truncate">Admin</p>
+            </div>
+            <LogOut className="w-4 h-4 text-white/20 group-hover:text-white/60" />
           </div>
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex overflow-hidden">
-        <ScrollArea className="flex-1">
-          <main className="p-10 max-w-7xl mx-auto">
-            <header className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
-              <div>
-                <motion.h1 
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-4xl font-black text-white tracking-tight mb-2"
-                >
-                  Dashboard
-                </motion.h1>
-                <p className="text-slate-400 font-medium">Manage and command your Meta Ads engine.</p>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
-                  <Input 
-                    placeholder="Search campaigns..." 
-                    className="pl-10 w-64 bg-slate-900/50 border-slate-800 focus:border-blue-500/50 transition-all rounded-xl"
-                  />
-                </div>
-                <Button variant="outline" size="icon" className="bg-slate-900 border-slate-800 rounded-xl relative">
-                  <Bell size={20} />
-                  <span className="absolute top-2 right-2 h-2 w-2 bg-blue-500 rounded-full border-2 border-slate-950" />
-                </Button>
-                <div className="h-8 w-px bg-slate-900 mx-2" />
-                <Button variant="outline" className="bg-slate-900 border-slate-800 rounded-xl gap-2 font-semibold">
-                  <Calendar size={18} />
-                  {dateRange}
-                </Button>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-6 font-bold shadow-lg shadow-blue-500/20">
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Sync
-                </Button>
-              </div>
-            </header>
+      {/* Main Content */}
+      <main className="flex-1 overflow-hidden flex flex-col">
+        {/* Header */}
+        <header className="h-16 border-b border-white/5 bg-black/20 backdrop-blur-md flex items-center justify-between px-8">
+          <div className="flex items-center gap-4">
+            <h1 className="text-lg font-semibold">{activeTab}</h1>
+            <div className="h-4 w-px bg-white/10" />
+            <div className="flex items-center gap-2 text-sm text-white/50 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 hover:bg-white/10 transition-all cursor-pointer">
+              <Calendar className="w-3.5 h-3.5" />
+              <span>{dateRange}</span>
+            </div>
+          </div>
 
+          <div className="flex items-center gap-4">
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-purple-500 transition-colors" />
+              <Input 
+                placeholder="Search campaigns..." 
+                className="w-64 pl-10 bg-white/5 border-white/5 focus-visible:ring-purple-500/50 focus-visible:border-purple-500/50 transition-all"
+              />
+            </div>
+            <Button variant="ghost" size="icon" className="relative">
+              <Bell className="w-5 h-5 text-white/60" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-purple-500 rounded-full border-2 border-[#050505]" />
+            </Button>
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white border-0 shadow-lg shadow-purple-500/20">
+              <Plus className="w-4 h-4 mr-2" />
+              Sync Now
+            </Button>
+          </div>
+        </header>
+
+        <ScrollArea className="flex-1 p-8">
+          <div className="max-w-7xl mx-auto space-y-8">
             {/* KPI Grid */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-12"
-            >
-              {mockKpiData.map((kpi, i) => (
-                <KPICard key={i} {...kpi} />
-              ))}
-            </motion.div>
-
-            {/* Data Viz Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="lg:col-span-2"
-              >
-                <PerformanceChart data={mockChartData} />
-              </motion.div>
-              
-              <motion.div 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 text-white relative overflow-hidden shadow-2xl shadow-blue-500/20"
-              >
-                <Cpu className="absolute -right-8 -bottom-8 h-48 w-48 text-white/10 rotate-12" />
-                <div className="relative z-10">
-                  <div className="h-10 w-10 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center mb-6">
-                    <Sparkles size={20} />
-                  </div>
-                  <h3 className="text-2xl font-black mb-4 leading-tight">Instant Action Required</h3>
-                  <p className="text-blue-100 text-sm mb-8 leading-relaxed font-medium">
-                    Our AI has detected 3 scaling opportunities in your "Summer Launch" campaign. You could increase ROI by up to 22%.
-                  </p>
-                  <Button className="w-full bg-white text-blue-600 font-bold hover:bg-white/90 rounded-xl py-6">
-                    Launch AI Audit
-                  </Button>
-                </div>
-              </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <KPICard title="Total Spend" value="$14,205" trend={12.5} />
+              <KPICard title="ROAS" value="3.85x" trend={8.2} />
+              <KPICard title="CTR" value="2.14%" trend={-2.4} />
+              <KPICard title="Conversions" value="1,240" trend={15.1} />
             </div>
 
-            {/* Campaign Table Section */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-white tracking-tight">Active Campaigns</h2>
-                <Button variant="link" className="text-blue-400 font-bold">View all 14 campaigns →</Button>
+            {/* Performance Chart */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <PerformanceChart data={[]} />
+              </div>
+              <div className="h-full">
+                <div className="h-full p-6 rounded-2xl bg-white/5 border border-white/5 flex flex-col justify-between group overflow-hidden relative">
+                  <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                    <Sparkles className="w-32 h-32" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">Campaign Distribution</h3>
+                    <p className="text-sm text-white/50">Budget allocation across objectives</p>
+                  </div>
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-4xl font-bold bg-gradient-to-br from-white to-white/60 bg-clip-text text-transparent">85%</p>
+                      <p className="text-xs text-purple-400 mt-1 uppercase tracking-widest font-semibold">Efficiency Rate</p>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full border-white/10 hover:bg-white/10">View Detailed Report</Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Campaigns Table */}
+            <div className="rounded-2xl bg-white/5 border border-white/5 overflow-hidden">
+              <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold">Active Campaigns</h2>
+                  <p className="text-sm text-white/50">Manage and monitor live performance</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="text-white/50">Filters</Button>
+                  <Button variant="ghost" size="sm" className="text-white/50">Export</Button>
+                </div>
               </div>
               <CampaignTable />
             </div>
-          </main>
+          </div>
         </ScrollArea>
+      </main>
 
-        {/* Right Sidebar - AI Panel */}
-        <aside className="w-96 hidden xl:block">
-          <AIPanel />
-        </aside>
-      </div>
+      {/* AI Panel */}
+      <AIPanel />
     </div>
-  );
-}
-
-function NavItem({ icon, label, active = false, onClick }: { icon: React.ReactNode, label: string, active?: boolean, onClick?: () => void }) {
-  return (
-    <button 
-      onClick={onClick}
-      className={cn(
-        "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
-        active 
-          ? "bg-blue-600/10 text-blue-500 shadow-sm border border-blue-500/10" 
-          : "text-slate-500 hover:bg-slate-900/50 hover:text-slate-200"
-      )}
-    >
-      <span className={cn(
-        "transition-transform duration-200 group-hover:scale-110",
-        active ? "text-blue-500" : "text-slate-500 group-hover:text-slate-300"
-      )}>
-        {icon}
-      </span>
-      <span className="font-bold text-sm tracking-tight">{label}</span>
-      {active && <motion.div layoutId="nav-active" className="ml-auto h-2 w-2 rounded-full bg-blue-500 shadow-lg shadow-blue-500/50" />}
-    </button>
   );
 }

@@ -46,18 +46,24 @@ export const syncWorker = new Worker(
         },
       });
 
-      // 2. Fetch Insights for this campaign
-      const insights = await metaApi.getCampaignInsights(camp.id);
+      // 2. Fetch Insights for this campaign (Last 30 days)
+      const timeRange = {
+        since: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        until: new Date().toISOString().split('T')[0]
+      };
+      
+      const insights = await metaApi.getCampaignInsights(camp.id, timeRange);
+      
       for (const ins of insights) {
         await db.campaignInsight.create({
           data: {
-            campaignId: camp.id, // This should map to internal ID in a real case, but using external as placeholder
+            campaignId: camp.id,
             date: new Date(ins.date_start),
             spend: parseFloat(ins.spend),
             impressions: parseInt(ins.impressions),
             clicks: parseInt(ins.clicks),
-            conversions: parseInt(ins.conversions[0]?.value || "0"),
-            revenue: parseFloat(ins.conversions[0]?.revenue || "0"),
+            conversions: parseInt(ins.actions?.find(a => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || "0"),
+            revenue: parseFloat(ins.action_values?.find(a => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || "0"),
           },
         });
       }
@@ -65,5 +71,5 @@ export const syncWorker = new Worker(
 
     console.log(`Sync completed for ${connection.id}`);
   },
-  { connection: redis }
+  { connection: redis as any }
 );

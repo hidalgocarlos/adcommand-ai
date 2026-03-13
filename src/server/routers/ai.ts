@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { db } from "@/lib/db";
 import { AiAnalyzer } from "@/lib/ai/analyzer";
-import { decrypt, encrypt } from "@/lib/crypto";
+import { encrypt, decrypt } from "@/lib/crypto";
 
 export const aiRouter = router({
   analyzeCampaign: protectedProcedure
@@ -40,11 +40,11 @@ export const aiRouter = router({
           campaignId: input.campaignId,
           workspaceId: input.workspaceId,
           provider: input.provider,
-          model: "pro-model",
-          prompt: "System Performance Audit",
+          model: "standard",
+          prompt: "Expert Performance Audit",
           rawResponse: JSON.stringify(analysisJson),
           recommendations: {
-            create: analysisJson.recommendations.map((rec: any) => ({
+            create: (analysisJson as any).recommendations.map((rec: any) => ({
               type: rec.type,
               priority: rec.priority,
               title: rec.title,

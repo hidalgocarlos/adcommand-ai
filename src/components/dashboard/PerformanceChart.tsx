@@ -16,7 +16,17 @@ interface PerformanceChartProps {
   title?: string;
 }
 
-export function PerformanceChart({ data, title = "Performance Over Time" }: PerformanceChartProps) {
+const defaultData = [
+  { date: 'Mon', value: 400 },
+  { date: 'Tue', value: 300 },
+  { date: 'Wed', value: 600 },
+  { date: 'Thu', value: 800 },
+  { date: 'Fri', value: 500 },
+  { date: 'Sat', value: 900 },
+  { date: 'Sun', value: 1100 },
+];
+
+export function PerformanceChart({ data = defaultData, title = "Performance Over Time" }: PerformanceChartProps) {
   return (
     <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-md">
       <CardHeader>
@@ -25,7 +35,7 @@ export function PerformanceChart({ data, title = "Performance Over Time" }: Perf
       <CardContent>
         <div className="h-[300px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data}>
+            <AreaChart data={data.length > 0 ? data : defaultData}>
               <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>

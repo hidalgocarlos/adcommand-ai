@@ -6,14 +6,14 @@ import { cn } from "@/lib/utils";
 interface KPICardProps {
   title: string;
   value: string | number;
-  change: number;
-  label: string;
+  trend: number;
+  label?: string;
   status?: "good" | "warning" | "critical";
   className?: string;
 }
 
-export function KPICard({ title, value, change, label, status, className }: KPICardProps) {
-  const isPositive = change >= 0;
+export function KPICard({ title, value, trend, label, status, className }: KPICardProps) {
+  const isPositive = trend >= 0;
   
   const statusColors = {
     good: "text-emerald-500",
@@ -36,9 +36,9 @@ export function KPICard({ title, value, change, label, status, className }: KPIC
         <div className="flex items-center pt-1 text-xs">
           <span className={cn("flex items-center font-medium", isPositive ? "text-emerald-500" : "text-red-500")}>
             {isPositive ? <TrendingUp className="mr-1 h-3 w-3" /> : <TrendingDown className="mr-1 h-3 w-3" />}
-            {Math.abs(change)}%
+            {Math.abs(trend)}%
           </span>
-          <span className="ml-1 text-slate-500">{label}</span>
+          {label && <span className="ml-1 text-slate-500">{label}</span>}
         </div>
       </CardContent>
     </Card>
